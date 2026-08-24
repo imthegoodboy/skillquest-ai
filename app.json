@@ -1,7 +1,7 @@
 {
   "slug": "skillquest-ai",
   "name": "SkillQuest AI",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "tagline": "Turn one goal and your real material into an adaptive practice path.",
   "description": "SkillQuest AI turns one open-ended learning goal into a personalized practice path. Learners can optionally add code, notes, document excerpts, or work samples so Anna can create specific tasks and give feedback grounded in what they are actually learning or making. Each path contains short ordered practice tasks, clear success checks, evidence-based AI review, an active-task coach, progress tracking, a learning journal, and a final applied outcome. Gamification remains available as a lightweight motivation layer, while the core flow stays simple: state a goal, practise on real material, submit work, and receive the next grounded adjustment. Transparent local fallbacks keep the workflow usable when a hosted model is unavailable, and saved learning data uses Anna Storage without a separate API key.",
   "category": "education",

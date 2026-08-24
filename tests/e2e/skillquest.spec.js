@@ -12,6 +12,7 @@ async function createMockAdventure(frame) {
   await frame.getByRole("link", { name: /Build my practice path/ }).click();
   await expect(frame.getByRole("heading", { name: /What do you want to learn or become able to do/ })).toBeVisible();
   await frame.getByLabel("Your learning goal").fill("I want to learn documentary video editing and produce a clear sixty-second documentary sequence for a community project.");
+  await frame.locator(".source-material > summary").click();
   await frame.getByLabel("Learning material or work sample").fill("My source contains an opening location shot, one interview answer, two action details, a reaction, and a closing consequence.");
   await frame.getByRole("button", { name: /Let Anna build my path/ }).click();
   await expect(frame.getByRole("heading", { name: "Cutcraft Citadel" })).toBeVisible({ timeout: 30_000 });

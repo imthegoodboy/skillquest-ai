@@ -7,7 +7,7 @@ Controlling guide: https://forum.anna.partners/t/build-on-anna-101/228
 ```text
 name: SkillQuest AI
 slug: skillquest-ai
-version: 1.1.0
+version: 1.1.1
 architecture: static Anna UI + Anna LLM + Anna Storage; no Executa
 ```
 
@@ -56,6 +56,14 @@ Version `1.1.0` addresses the review feedback by:
 - letting learners paste or import bounded text/code material for plan generation and task review;
 - grounding plan, review, and Coach prompts in that material while treating embedded instructions as untrusted data.
 
+Version `1.1.1` completes the first-use polish before resubmission by:
+
+- separating the Back link from the onboarding guidance label;
+- collapsing optional learning material behind progressive disclosure;
+- keeping the primary path-generation action visible in the default 1200×820 Anna view;
+- adding a browser regression check for all three conditions;
+- regenerating the desktop and mobile Marketplace screenshots from the verified build.
+
 ## Previous remote handoff (2026-08-24)
 
 ```text
@@ -84,13 +92,13 @@ status: pending_review
 is_published: false
 ```
 
-Next gate: install exact `1.1.0` from the SkillQuest Developer card, save its
+Next gate: publish and install exact `1.1.1` from the SkillQuest Developer card, save its
 permission configuration, exercise the installed first-use/material/review/Coach
-flow, confirm `apps grants` reports `installed_version=1.1.0`, then resubmit and
-confirm `review_candidate_version=1.1.0`. Do not click a Version-history
+flow, confirm `apps grants` reports `installed_version=1.1.1`, then resubmit and
+confirm `review_candidate_version=1.1.1`. Do not click a Version-history
 `Publish` button or run `apps release` before approval.
 
-Do not release `1.0.0`. Verify, publish, install, and re-submit `1.1.0`, then
+Do not release `1.0.0` or `1.1.0`. Verify, publish, install, and re-submit `1.1.1`, then
 release only after Anna marks that exact candidate approved.
 
 ## Upload, install, and review

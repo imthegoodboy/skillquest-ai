@@ -29,8 +29,23 @@ test("capture exact Anna desktop views for listing QA", async ({ page }) => {
   await captureFrame(page, "home-desktop.png");
   await frame.getByRole("link", { name: /Build my practice path/ }).click();
   await expect(frame.getByRole("heading", { name: /What do you want to learn or become able to do/ })).toBeVisible();
+  const firstUseLayout = await page.frames().find((candidate) => candidate.url().includes("/anna-apps/")).evaluate(() => {
+    const back = document.querySelector(".wizard-shell > header .quiet-link").getBoundingClientRect();
+    const guide = document.querySelector(".wizard-shell > header > p").getBoundingClientRect();
+    const submit = document.querySelector("#adventure-form button[type='submit']").getBoundingClientRect();
+    return {
+      headerHasGap: back.right + 16 <= guide.left,
+      submitBottom: Math.round(submit.bottom),
+      viewportHeight: document.documentElement.clientHeight,
+      optionalMaterialCollapsed: !document.querySelector(".source-material").open,
+    };
+  });
+  expect(firstUseLayout.headerHasGap).toBe(true);
+  expect(firstUseLayout.optionalMaterialCollapsed).toBe(true);
+  expect(firstUseLayout.submitBottom).toBeLessThanOrEqual(firstUseLayout.viewportHeight);
   await captureFrame(page, "goal-desktop.png");
   await frame.getByLabel("Your learning goal").fill("I want to learn documentary video editing and produce a clear sixty-second documentary sequence for a community project.");
+  await frame.locator(".source-material > summary").click();
   await frame.getByLabel("Learning material or work sample").fill("My source contains an interview answer, two action details, a reaction, and a closing consequence.");
   await frame.getByRole("button", { name: /Let Anna build my path/ }).click();
   await expect(frame.getByRole("heading", { name: "Cutcraft Citadel" })).toBeVisible({ timeout: 30_000 });

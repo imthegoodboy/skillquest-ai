@@ -1283,7 +1283,7 @@ main {
 }
 
 .wizard-shell {
-  min-height: calc(100dvh - 160px);
+  min-height: auto;
   padding: 8px;
   border-radius: 40px;
   background: rgba(245, 244, 232, 0.04);
@@ -1294,8 +1294,12 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 86px;
-  padding: 16px 28px;
+  min-height: 58px;
+  padding: 10px 24px;
+}
+
+.wizard-shell > header .quiet-link {
+  margin-left: 0;
 }
 
 .wizard-progress {
@@ -1561,16 +1565,16 @@ main {
 
 .generation-note p {
   margin-top: 4px;
-  color: var(--bone-faint);
+  color: var(--bone-dim);
   font-size: 10px;
 }
 
 .wizard-shell form > footer {
   display: flex;
-  min-height: 82px;
+  min-height: 64px;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 22px;
+  padding: 8px 18px;
   box-shadow: inset 0 1px var(--hairline);
 }
 
@@ -3967,40 +3971,44 @@ html[data-reduce-motion="true"] .reveal {
   text-transform: uppercase;
 }
 
-.wizard-layout { min-height: 640px; }
+.wizard-layout { min-height: 450px; }
 .wizard-question { display: flex; flex-direction: column; justify-content: center; }
-.wizard-question h1 { max-width: 560px; font-size: clamp(42px, 4.7vw, 68px); }
+.wizard-question h1 { max-width: 560px; font-size: clamp(39px, 3.9vw, 54px); }
 
-.ai-role-list {
+.wizard-question { padding: clamp(32px, 3.5vw, 46px); }
+.wizard-fields { gap: 14px; padding: clamp(28px, 3vw, 40px); }
+.field--goal textarea { min-height: 136px; border-radius: 22px; font-family: "Bricolage Grotesque", sans-serif; font-size: 18px; line-height: 1.45; }
+
+.source-material {
+  overflow: hidden;
+  border-radius: 18px;
+  background: rgba(245, 244, 232, 0.025);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.source-material > summary {
   display: grid;
-  gap: 14px;
-  margin-top: 44px;
+  grid-template-columns: 24px 1fr 18px;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 17px;
+  cursor: pointer;
   list-style: none;
 }
 
-.ai-role-list li {
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  gap: 10px;
-  color: var(--bone-dim);
-  font-size: 12px;
-}
-
-.ai-role-list span { color: var(--lime); font-size: 9px; font-weight: 850; letter-spacing: 0.12em; }
-.field--goal textarea { min-height: 174px; border-radius: 22px; font-family: "Bricolage Grotesque", sans-serif; font-size: 19px; line-height: 1.45; }
-
-.source-material {
-  display: grid;
-  gap: 16px;
-  padding: 23px 0;
-  box-shadow: inset 0 1px var(--hairline), inset 0 -1px var(--hairline);
-}
-
-.source-material > div:first-child { display: flex; gap: 13px; }
-.source-material > div:first-child > span { flex: 0 0 auto; color: var(--lime); font-size: 22px; }
+.source-material > summary::-webkit-details-marker { display: none; }
+.source-material > summary > span { color: var(--lime); font-size: 22px; }
+.source-material > summary > i { color: var(--bone-faint); transition: transform 300ms ease; }
+.source-material[open] > summary > i { transform: rotate(90deg); }
 .source-material strong { font-size: 12px; }
 .source-material strong i { color: var(--bone-faint); font-style: normal; font-weight: 500; }
 .source-material small { display: block; margin-top: 4px; color: var(--bone-faint); font-size: 9px; line-height: 1.5; }
+
+.source-material__body {
+  display: grid;
+  gap: 14px;
+  padding: 0 17px 18px;
+}
 
 .source-actions {
   display: flex;
@@ -4083,6 +4091,7 @@ html[data-reduce-motion="true"] .reveal {
 .rail-meta p { margin-top: 9px; color: var(--bone-faint); font-size: 9px; line-height: 1.55; }
 
 .wizard-options > summary:focus-visible,
+.source-material > summary:focus-visible,
 .evidence-criteria > summary:focus-visible,
 .rail-meta > summary:focus-visible,
 .field-guide--details > summary:focus-visible { outline: 2px solid var(--lime); outline-offset: -2px; }

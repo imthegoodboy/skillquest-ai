@@ -8,6 +8,7 @@ test("Anna creates, evaluates, and coaches one live SkillQuest", async ({ page }
   const frame = page.frameLocator("iframe#app");
   await frame.getByRole("link", { name: /Build my practice path/ }).click();
   await frame.getByLabel("Your learning goal").fill("I want to deliver and explain a clear five-minute product story that helps my team remember the user problem and next action.");
+  await frame.locator(".source-material > summary").click();
   await frame.getByLabel("Learning material or work sample").fill("Current outline: internal project context, three feature bullets, architecture notes, and a closing roadmap. The user problem appears only after the feature list.");
   await frame.getByRole("button", { name: /Let Anna build my path/ }).click();
   await expect(frame.getByText("Designed by Anna")).toBeVisible({ timeout: 210_000 });
