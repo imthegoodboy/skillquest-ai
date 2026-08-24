@@ -64,10 +64,31 @@ Anna app id: 220
 immutable version: 1.0.0 (#569)
 bundle: bundle_ready, 6 files, 251.3 KB
 owner install: 1.0.0
-review candidate: 1.0.0 (superseded locally by 1.1.0; not yet uploaded)
+review candidate: 1.0.0 (superseded by the current handoff below)
 status: pending_review
 is_published: false
 ```
+
+## Current remote handoff (2026-08-25)
+
+```text
+GitHub commit: 572b78e
+Anna app id: 220
+immutable version: 1.1.0 (#576)
+content hash: 32371a1055267b36bfacde7480ad06d8ace11b679311ed790d8f761eacbc0d21
+bundle: bundle_ready, 6 files, 270,271 bytes
+listing: updated description, logo, and 4 CDN screenshots
+installed version before acceptance: 1.0.0
+review candidate before resubmission: 1.0.0
+status: pending_review
+is_published: false
+```
+
+Next gate: install exact `1.1.0` from the SkillQuest Developer card, save its
+permission configuration, exercise the installed first-use/material/review/Coach
+flow, confirm `apps grants` reports `installed_version=1.1.0`, then resubmit and
+confirm `review_candidate_version=1.1.0`. Do not click a Version-history
+`Publish` button or run `apps release` before approval.
 
 Do not release `1.0.0`. Verify, publish, install, and re-submit `1.1.0`, then
 release only after Anna marks that exact candidate approved.
