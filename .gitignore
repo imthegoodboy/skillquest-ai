@@ -1,0 +1,8 @@
+.anna/
+node_modules/
+test-results/
+playwright-report/
+coverage/
+manifest.qa-mobile.json
+*.log
+.DS_Store

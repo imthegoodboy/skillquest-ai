@@ -1,0 +1,37 @@
+import { expect, test } from "@playwright/test";
+
+test("Anna creates, evaluates, and coaches one live SkillQuest", async ({ page }) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  await page.goto("/");
+  const frame = page.frameLocator("iframe#app");
+  await frame.getByRole("link", { name: /Create my first quest/ }).click();
+  await frame.getByLabel("Skill to learn").fill("Product storytelling for short presentations");
+  await frame.getByLabel("What result would count?").fill("Deliver and explain a clear five-minute product story to a small team.");
+  await frame.getByRole("button", { name: "Continue" }).click();
+  await frame.getByLabel("Minutes per session").fill("25");
+  await frame.getByLabel("Sessions per week").fill("3");
+  await frame.getByLabel("Adventure length").fill("4");
+  await frame.getByRole("button", { name: "Continue" }).click();
+  await frame.getByLabel("Your reason").fill("I want to explain product ideas clearly enough that teammates remember the problem and next action.");
+  await frame.getByRole("button", { name: /Generate my quest map/ }).click();
+  await expect(frame.getByText("Designed by Anna")).toBeVisible({ timeout: 210_000 });
+  await expect(frame.locator(".quest-node")).toHaveCount(12);
+  await frame.locator("a.quest-node").first().click();
+  await frame.locator(".criteria-checks input").evaluateAll((nodes) => nodes.forEach((node) => node.click()));
+  await frame.getByLabel("What did you make or practise?").fill("I wrote a five-part product story outline, recorded a two-minute opening, and revised the transition after noticing that the audience problem appeared too late.");
+  await frame.getByLabel("Your reflection").fill("Moving the user problem into the opening made the product choice easier to follow. My next attempt should remove one internal term.");
+  await frame.getByRole("button", { name: /Submit mission/ }).click();
+  await expect(frame.getByRole("dialog")).toBeVisible({ timeout: 210_000 });
+  await frame.getByRole("dialog").getByRole("button", { name: "Review feedback" }).evaluate((button) => button.click());
+  await expect(frame.getByText(/Mission review · Anna/)).toBeVisible();
+  await frame.getByRole("link", { name: "Mentor" }).first().evaluate((link) => link.click());
+  await frame.locator(".mentor-empty button").first().click();
+  await frame.getByRole("button", { name: "Send" }).click();
+  const reply = frame.locator(".mentor-message--assistant").last();
+  await expect(reply.locator("p")).toBeVisible({ timeout: 210_000 });
+  await expect(reply).not.toContainText("Local fallback");
+  await expect(reply.locator("p")).not.toHaveText(/^\s*[\[{]/);
+  expect(errors).toEqual([]);
+});

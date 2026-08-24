@@ -1,0 +1,17 @@
+{
+  "slug": "skillquest-ai",
+  "name": "SkillQuest AI",
+  "version": "1.0.0",
+  "tagline": "Turn any skill into a world of quests, practice, and visible progress.",
+  "description": "SkillQuest AI turns a real learning goal into a personalized adventure. Anna creates a structured quest map, practical daily missions, milestone challenges, and a final boss project around the learner's available time and desired outcome. Learners can complete evidence-based missions, earn XP, grow a skill tree, maintain a streak, ask a context-aware Mentor for help, review feedback, keep a learning journal, and export their complete progress. Core progression remains usable with transparent local fallbacks when a hosted model is unavailable, and all personal learning data is stored through Anna Storage without a separate API key.",
+  "category": "education",
+  "logo_file": "listing-assets/skillquest-logo.png",
+  "screenshots": [
+    "listing-assets/home-desktop.png",
+    "listing-assets/quest-map-desktop.png",
+    "listing-assets/mentor-mobile.png"
+  ],
+  "homepage_url": "https://github.com/imthegoodboy/skillquest-ai",
+  "support_url": "https://github.com/imthegoodboy/skillquest-ai/issues",
+  "privacy_url": "https://github.com/imthegoodboy/skillquest-ai/blob/main/PRIVACY.md"
+}

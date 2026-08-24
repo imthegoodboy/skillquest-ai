@@ -1,0 +1,45 @@
+{
+  "schema": 2,
+  "permissions": ["llm.complete", "storage.read", "storage.write"],
+  "host_capabilities": ["llm.complete", "aps.kv"],
+  "required_executas": [],
+  "optional_executas": [],
+  "system_prompt_addendum": "SkillQuest AI is a learning coach, not a substitute for qualified instruction or safety guidance. Keep generated quests practical, specific, and appropriate for the learner's stated level and time. Stay grounded in the active adventure, distinguish evaluation from fact, never invent completed work, and do not award progress the learner did not submit.",
+  "tags": ["learning", "education", "skills", "gamification", "coach"],
+  "ui": {
+    "bundle": {
+      "format": "static-spa",
+      "entry": "index.html",
+      "external_origins": []
+    },
+    "views": [
+      {
+        "name": "main",
+        "title": "SkillQuest AI",
+        "default": true,
+        "entry": "index.html",
+        "default_size": { "w": 1200, "h": 820 },
+        "min_size": { "w": 320, "h": 520 },
+        "max_size": { "w": 1680, "h": 1200 },
+        "resizable": true,
+        "movable": true,
+        "single_instance": true,
+        "summary_template": "Personalized quest map, current mission, skill progression, evidence, and Mentor context"
+      }
+    ],
+    "host_api": {
+      "llm": ["complete"],
+      "storage": ["get", "set", "delete", "list"],
+      "window": ["set_title", "ready"]
+    },
+    "csp_overrides": {
+      "script-src": ["'self'"]
+    },
+    "state_merge": "last_writer_wins"
+  },
+  "dev": {
+    "fixtures": ["fixtures/*.jsonl"],
+    "seed_storage": {},
+    "user_id": 1
+  }
+}
