@@ -45,6 +45,21 @@ world outline and deterministically expands it into the complete mission
 contract. Empty content is rejected, one retry is bounded, and local recovery is
 always labelled.
 
+## Remote handoff (2026-08-24)
+
+```text
+GitHub: https://github.com/imthegoodboy/skillquest-ai
+Anna app id: 220
+immutable version: 1.0.0 (#569)
+bundle: bundle_ready, 6 files, 251.3 KB
+owner install: 1.0.0
+review candidate: 1.0.0
+status: pending_review
+is_published: false
+```
+
+Do not run `apps release 1.0.0` until Anna marks this exact candidate approved.
+
 ## Upload, install, and review
 
 ```powershell
