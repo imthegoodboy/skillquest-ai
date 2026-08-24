@@ -15,6 +15,7 @@ import {
   getQuestStatus,
   levelFromXp,
   normalizeGeneratedPlan,
+  normalizeAdventureInput,
   normalizeStore,
   parseStructuredJson,
 } from "../src/core.js";
@@ -44,6 +45,18 @@ test("fallback generation creates a complete goal-derived learning world", () =>
   assert.equal(plan.skillTree.length, 5);
   assert.match(JSON.stringify(plan), /Documentary video editing/i);
   assert.match(JSON.stringify(plan), /sixty-second documentary sequence/i);
+});
+
+test("one natural-language goal becomes a complete backward-compatible learner profile", () => {
+  const value = normalizeAdventureInput({
+    goal: "I want to understand the architecture of Anna Deck well enough to trace one complete data flow.",
+    sourceMaterial: "router -> session store -> renderer",
+    sourceLabel: "architecture-notes.md",
+  });
+  assert.match(value.skill, /understand the architecture of Anna Deck/i);
+  assert.match(value.targetOutcome, /trace one complete data flow/i);
+  assert.equal(value.sourceLabel, "architecture-notes.md");
+  assert.match(value.sourceMaterial, /session store/);
 });
 
 test("incomplete model plans are normalized without empty product screens", () => {
@@ -96,6 +109,21 @@ test("local evidence evaluation stays transparent and reacts to completeness", (
   assert.ok(strong.score > weak.score);
   assert.ok(strong.strengths.length >= 2);
   assert.ok(strong.nextSteps.length >= 2);
+});
+
+test("submitted learner material is preserved and improves the grounded local review", () => {
+  const value = adventure();
+  const quest = flattenQuests(value)[0];
+  const submission = {
+    workMaterial: "export function route(input) { return normalize(input); }",
+    proof: "I traced the input into normalize and annotated the returned value.",
+    reflection: "The boundary validation was the part I initially missed.",
+    checks: [true, true, true],
+  };
+  const updated = completeQuest(value, quest.id, submission);
+  const saved = flattenQuests(updated)[0];
+  assert.match(saved.workMaterial, /normalize/);
+  assert.match(saved.evaluation.strengths.join(" "), /real work|inspectable artifact/i);
 });
 
 test("progress, levels, and badges are derived from submitted work", () => {

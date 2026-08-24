@@ -1,14 +1,15 @@
 {
   "slug": "skillquest-ai",
   "name": "SkillQuest AI",
-  "version": "1.0.0",
-  "tagline": "Turn any skill into a world of quests, practice, and visible progress.",
-  "description": "SkillQuest AI turns a real learning goal into a personalized adventure. Anna creates a structured quest map, practical daily missions, milestone challenges, and a final boss project around the learner's available time and desired outcome. Learners can complete evidence-based missions, earn XP, grow a skill tree, maintain a streak, ask a context-aware Mentor for help, review feedback, keep a learning journal, and export their complete progress. Core progression remains usable with transparent local fallbacks when a hosted model is unavailable, and all personal learning data is stored through Anna Storage without a separate API key.",
+  "version": "1.1.0",
+  "tagline": "Turn one goal and your real material into an adaptive practice path.",
+  "description": "SkillQuest AI turns one open-ended learning goal into a personalized practice path. Learners can optionally add code, notes, document excerpts, or work samples so Anna can create specific tasks and give feedback grounded in what they are actually learning or making. Each path contains short ordered practice tasks, clear success checks, evidence-based AI review, an active-task coach, progress tracking, a learning journal, and a final applied outcome. Gamification remains available as a lightweight motivation layer, while the core flow stays simple: state a goal, practise on real material, submit work, and receive the next grounded adjustment. Transparent local fallbacks keep the workflow usable when a hosted model is unavailable, and saved learning data uses Anna Storage without a separate API key.",
   "category": "education",
   "logo_file": "listing-assets/skillquest-logo.png",
   "screenshots": [
     "listing-assets/home-desktop.png",
-    "listing-assets/quest-map-desktop.png",
+    "listing-assets/goal-desktop.png",
+    "listing-assets/mission-work-desktop.png",
     "listing-assets/mentor-mobile.png"
   ],
   "homepage_url": "https://github.com/imthegoodboy/skillquest-ai",

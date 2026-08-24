@@ -7,7 +7,7 @@ Controlling guide: https://forum.anna.partners/t/build-on-anna-101/228
 ```text
 name: SkillQuest AI
 slug: skillquest-ai
-version: 1.0.0
+version: 1.1.0
 architecture: static Anna UI + Anna LLM + Anna Storage; no Executa
 ```
 
@@ -24,17 +24,18 @@ npm run test:e2e:live
 anna-app apps status skillquest-ai --account $ANNA_HOST --json
 ```
 
-The live test must create a plan labelled `Anna`, receive a non-fallback Mentor
-reply, evaluate a mission, and finish without application console errors.
+The live test must create a path labelled `Anna`, receive a non-fallback Coach
+reply grounded in saved material, evaluate submitted work, and finish without
+application console errors.
 
-Verified on 2026-08-24 with Anna CLI `0.1.49` and schema `0.19.0`:
+Verified on 2026-08-25 with Anna CLI `0.1.49` and schema `0.19.0`:
 
 ```text
-13 deterministic logic/platform tests passed
+15 deterministic logic/platform tests passed
 5 desktop Anna-harness workflows passed
 axe accessibility scans passed
 1 real 390x780 manifest workflow passed without horizontal overflow
-1 live Anna plan + evaluation + Mentor workflow passed in 1.9 minutes
+1 live Anna path + grounded work evaluation + Coach workflow passed in 2.1 minutes
 strict validation passed
 0 npm vulnerabilities
 ```
@@ -45,7 +46,17 @@ world outline and deterministically expands it into the complete mission
 contract. Empty content is rejected, one retry is bounded, and local recovery is
 always labelled.
 
-## Remote handoff (2026-08-24)
+## Marketplace review recovery (2026-08-25)
+
+Version `1.1.0` addresses the review feedback by:
+
+- stating the goal → practice path → real work → AI feedback loop before gamification;
+- replacing the three-step questionnaire with one natural-language goal and optional controls;
+- giving task pages one primary action, a consistent Practice path breadcrumb, and secondary XP treatment;
+- letting learners paste or import bounded text/code material for plan generation and task review;
+- grounding plan, review, and Coach prompts in that material while treating embedded instructions as untrusted data.
+
+## Previous remote handoff (2026-08-24)
 
 ```text
 GitHub: https://github.com/imthegoodboy/skillquest-ai
@@ -53,12 +64,13 @@ Anna app id: 220
 immutable version: 1.0.0 (#569)
 bundle: bundle_ready, 6 files, 251.3 KB
 owner install: 1.0.0
-review candidate: 1.0.0
+review candidate: 1.0.0 (superseded locally by 1.1.0; not yet uploaded)
 status: pending_review
 is_published: false
 ```
 
-Do not run `apps release 1.0.0` until Anna marks this exact candidate approved.
+Do not release `1.0.0`. Verify, publish, install, and re-submit `1.1.0`, then
+release only after Anna marks that exact candidate approved.
 
 ## Upload, install, and review
 

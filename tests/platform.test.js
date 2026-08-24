@@ -24,6 +24,7 @@ function compactBlueprint() {
       `Stage ${stageIndex + 1}`,
       "Progressive practice",
       "Apply one stronger storytelling constraint",
+      ["Inspect the signal", "Build one clear sequence", "Review the audience effect"],
     ]),
   };
 }
@@ -36,6 +37,7 @@ test("compact Anna blueprints expand into complete deterministic mission contrac
   assert.equal(plan.stages[1].quests[2].type, "boss");
   assert.equal(plan.stages[3].quests[2].type, "boss");
   assert.equal(plan.stages[0].quests[0].durationMinutes, 25);
+  assert.equal(plan.stages[0].quests[0].title, "Inspect the signal");
   assert.equal(plan.stages[3].quests[2].durationMinutes, 50);
   assert.ok(plan.stages.flatMap((stage) => stage.quests).every((quest) => quest.steps.length === 3 && quest.successCriteria.length === 3));
 });

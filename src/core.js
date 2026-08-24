@@ -1,5 +1,5 @@
 export const STORE_KEY = "skillquest-ai/v1/store";
-export const STORE_VERSION = 1;
+export const STORE_VERSION = 2;
 export const MAX_ADVENTURES = 18;
 export const MAX_CHAT_MESSAGES = 40;
 export const MAX_JOURNAL_ENTRIES = 80;
@@ -36,14 +36,26 @@ function deepCopy(value) {
   return globalThis.structuredClone ? structuredClone(value) : JSON.parse(JSON.stringify(value));
 }
 
+export function deriveSkillFromGoal(value) {
+  const firstThought = cleanText(value, 800).split(/[.!?\n]/)[0]
+    .replace(/^(?:please\s+)?(?:help me\s+)?(?:i(?:'d| would)? like to\s+|i want to\s+|my goal is to\s+|learn(?: how)? to\s+|become able to\s+)/i, "")
+    .trim();
+  return cleanText(firstThought, 100);
+}
+
 export function normalizeAdventureInput(raw = {}) {
-  const skill = cleanText(raw.skill, 100);
-  const targetOutcome = cleanText(raw.targetOutcome, 360);
+  const legacyGoal = [raw.skill, raw.targetOutcome].map((item) => cleanText(item, 360)).filter(Boolean).join(": ");
+  const goal = cleanText(raw.goal, 800) || legacyGoal;
+  const skill = cleanText(raw.skill, 100) || deriveSkillFromGoal(goal);
+  const targetOutcome = cleanText(raw.targetOutcome, 800) || goal;
   return {
+    goal,
     skill,
     title: cleanText(raw.title, 100) || (skill ? `${skill} quest` : "Untitled quest"),
     targetOutcome: targetOutcome || (skill ? `Create a concrete result that demonstrates practical ${skill} ability.` : "Create a concrete result that demonstrates the skill."),
     motivation: cleanText(raw.motivation, 800),
+    sourceMaterial: cleanText(raw.sourceMaterial, 5000),
+    sourceLabel: cleanText(raw.sourceLabel, 120),
     currentLevel: LEVELS.has(raw.currentLevel) ? raw.currentLevel : "beginner",
     pace: PACES.has(raw.pace) ? raw.pace : "steady",
     minutesPerSession: clamp(raw.minutesPerSession, 10, 180),
@@ -57,6 +69,7 @@ function fallbackQuest(input, stageIndex, questIndex, type, title, focus) {
   const skill = input.skill || "this skill";
   const outcome = input.targetOutcome || `demonstrate practical ${skill} ability`;
   const isBoss = type === "boss";
+  const materialLabel = input.sourceLabel || "your supplied learning material";
   const xp = isBoss ? 240 : 90 + stageIndex * 20 + questIndex * 10;
   return {
     id: createId("quest"),
@@ -67,7 +80,9 @@ function fallbackQuest(input, stageIndex, questIndex, type, title, focus) {
       : `${focus} through a small, observable ${skill} practice session.`,
     brief: isBoss
       ? `Combine the strongest parts of your previous practice into one coherent demonstration. Keep the scope small enough to finish and strong enough to review honestly.`
-      : `Work in one focused session. Capture what you attempted, what happened, and what you would change on the next repetition.`,
+      : input.sourceMaterial
+        ? `Use ${materialLabel} as the source of truth. Work in one focused session, point to the part you used, and capture what changed in your understanding or output.`
+        : `Work in one focused session. Capture what you attempted, what happened, and what you would change on the next repetition.`,
     lesson: {
       principle: isBoss ? "Integration reveals real capability" : "Short feedback loops beat passive familiarity",
       explanation: isBoss
@@ -81,7 +96,7 @@ function fallbackQuest(input, stageIndex, questIndex, type, title, focus) {
     xp,
     skills: [focus, skill].map((item) => cleanText(item, 60)).filter(Boolean).slice(0, 2),
     steps: [
-      `Define one visible result for this ${skill} session.`,
+      input.sourceMaterial ? `Choose the exact passage, component, or output in ${materialLabel} that this session will address.` : `Define one visible result for this ${skill} session.`,
       isBoss ? "Build the complete result without hiding unfinished parts." : "Complete one focused attempt before consuming more information.",
       "Compare the result with the success criteria and record the next adjustment.",
     ],
@@ -191,6 +206,7 @@ function normalizeQuest(raw, fallback) {
     completed: Boolean(raw?.completed),
     completedAt: raw?.completedAt ? dateIso(raw.completedAt) : null,
     proof: cleanText(raw?.proof, 6000),
+    workMaterial: cleanText(raw?.workMaterial, 5000),
     reflection: cleanText(raw?.reflection, 3000),
     checks: Array.isArray(raw?.checks) ? raw.checks.slice(0, 8).map(Boolean) : [],
     evaluation: raw?.evaluation ? normalizeEvaluation(raw.evaluation) : null,
@@ -248,9 +264,12 @@ export function createAdventure(rawInput, rawPlan, source = "local") {
   return {
     id: createId("adventure"),
     title: plan.title,
+    goal: input.goal,
     skill: input.skill,
     targetOutcome: input.targetOutcome,
     motivation: input.motivation,
+    sourceMaterial: input.sourceMaterial,
+    sourceLabel: input.sourceLabel,
     currentLevel: input.currentLevel,
     pace: input.pace,
     minutesPerSession: input.minutesPerSession,
@@ -354,11 +373,12 @@ export function isCompleteEvaluation(raw) {
 
 export function buildFallbackEvaluation(quest, submission = {}) {
   const proof = cleanText(submission.proof, 6000);
+  const workMaterial = cleanText(submission.workMaterial, 5000);
   const reflection = cleanText(submission.reflection, 3000);
   const checks = Array.isArray(submission.checks) ? submission.checks.map(Boolean) : [];
   const met = checks.filter(Boolean).length;
   const criteriaTotal = Math.max(1, quest?.successCriteria?.length || checks.length || 1);
-  const evidenceScore = Math.min(22, Math.round(proof.length / 30));
+  const evidenceScore = Math.min(22, Math.round((proof.length + workMaterial.length) / 30));
   const reflectionScore = Math.min(18, Math.round(reflection.length / 24));
   const criteriaScore = Math.round((met / criteriaTotal) * 35);
   const score = clamp(30 + evidenceScore + reflectionScore + criteriaScore, 35, 94);
@@ -368,7 +388,7 @@ export function buildFallbackEvaluation(quest, submission = {}) {
     verdict: score >= 80 ? "Quest cleared with strong evidence" : score >= 62 ? "Quest cleared—one more pass will sharpen it" : "Progress recorded—strengthen the proof",
     feedback: `Your submission records ${met} of ${criteriaTotal} success criteria for “${cleanText(quest?.title, 110)}”. The evidence and reflection are saved; this local review measures completeness, not expert mastery.`,
     strengths: [
-      proof ? "You captured concrete evidence instead of marking the mission complete without a trail." : "You completed a structured review of the mission.",
+      workMaterial ? "You supplied real work for the review, so the feedback can stay anchored to an inspectable artifact." : proof ? "You captured concrete evidence instead of marking the mission complete without a trail." : "You completed a structured review of the mission.",
       reflection ? "You named what changed during the attempt, which makes the next repetition more useful." : "The success criteria give the next attempt a clear target.",
     ],
     nextSteps: [
@@ -395,6 +415,7 @@ export function completeQuest(adventureValue, questId, submission = {}, rawEvalu
 
   const evaluation = rawEvaluation ? normalizeEvaluation(rawEvaluation) : buildFallbackEvaluation(target, submission);
   target.proof = cleanText(submission.proof, 6000);
+  target.workMaterial = cleanText(submission.workMaterial, 5000);
   target.reflection = cleanText(submission.reflection, 3000);
   target.checks = Array.isArray(submission.checks) ? submission.checks.slice(0, target.successCriteria.length).map(Boolean) : [];
   target.evaluation = evaluation;
@@ -509,9 +530,12 @@ function normalizeAdventure(raw) {
   return {
     id: cleanText(raw?.id, 100) || createId("adventure"),
     title: plan.title,
+    goal: input.goal,
     skill: input.skill,
     targetOutcome: input.targetOutcome,
     motivation: input.motivation,
+    sourceMaterial: input.sourceMaterial,
+    sourceLabel: input.sourceLabel,
     currentLevel: input.currentLevel,
     pace: input.pace,
     minutesPerSession: input.minutesPerSession,
@@ -646,10 +670,13 @@ export function compactAdventureContext(adventure, quest = null) {
   const active = quest || getActiveQuest(adventure);
   return {
     title: adventure.title,
+    goal: adventure.goal || adventure.targetOutcome,
     skill: adventure.skill,
     targetOutcome: adventure.targetOutcome,
     level: adventure.currentLevel,
     motivation: adventure.motivation,
+    learningMaterial: cleanText(adventure.sourceMaterial, 5000) || null,
+    learningMaterialLabel: cleanText(adventure.sourceLabel, 120) || null,
     schedule: `${adventure.sessionsPerWeek} sessions/week, ${adventure.minutesPerSession} minutes/session`,
     progress: `${progress.completed}/${progress.total} quests, ${adventure.stats.xp} XP`,
     activeQuest: active ? {
@@ -660,6 +687,7 @@ export function compactAdventureContext(adventure, quest = null) {
       principle: active.lesson?.principle,
       steps: active.steps,
       successCriteria: active.successCriteria,
+      workMaterial: cleanText(active.workMaterial, 5000),
       proof: cleanText(active.proof, 1400),
       reflection: cleanText(active.reflection, 900),
     } : null,
