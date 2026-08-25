@@ -80,26 +80,42 @@ is_published: false
 ## Current remote handoff (2026-08-25)
 
 ```text
-GitHub commit: 572b78e
+GitHub build commit: b92095b
 Anna app id: 220
-immutable version: 1.1.0 (#576)
-content hash: 32371a1055267b36bfacde7480ad06d8ace11b679311ed790d8f761eacbc0d21
-bundle: bundle_ready, 6 files, 270,271 bytes
+immutable version: 1.1.1 (#577)
+content hash: 666ddd79cd2c821d0a9ef58ddd6b5524034cef56014559289899335c849c8644
+bundle: bundle_ready, 6 files, 270,527 bytes
 listing: updated description, logo, and 4 CDN screenshots
-installed version before acceptance: 1.0.0
-review candidate before resubmission: 1.0.0
+installed version: 1.1.1
+permission grants: satisfied; no missing scopes or Executas
+review candidate: 1.1.1
 status: pending_review
 is_published: false
 ```
 
-Next gate: publish and install exact `1.1.1` from the SkillQuest Developer card, save its
-permission configuration, exercise the installed first-use/material/review/Coach
-flow, confirm `apps grants` reports `installed_version=1.1.1`, then resubmit and
-confirm `review_candidate_version=1.1.1`. Do not click a Version-history
-`Publish` button or run `apps release` before approval.
+Owner acceptance on the installed Anna runtime passed with exact version `1.1.1`:
 
-Do not release `1.0.0` or `1.1.0`. Verify, publish, install, and re-submit `1.1.1`, then
-release only after Anna marks that exact candidate approved.
+```text
+single-goal onboarding loaded with optional material collapsed and the CTA visible
+Anna generated a TypeScript path from a natural-language two-week goal
+mission breadcrumbs and one-primary-action hierarchy worked
+submitted TypeScript/compiler evidence received a grounded 95/100 review
+the completed mission awarded 100 XP and unlocked the next task
+Coach used the active task, refused to invent missing saved evidence, and asked for the exact compiler error
+two learning worlds and 100 XP persisted on Home
+no bundled Executa was required
+```
+
+The Developer card initially installed `1.0.0` because the existing review candidate
+was still pinned to that version. Developer → SkillQuest → Settings → **Submit now**
+successfully re-pinned the latest immutable draft; `apps status` then reported
+`review_candidate_version=1.1.1`, and reinstalling reported
+`Installed "SkillQuest AI" (v1.1.1)`. Always verify both fields instead of trusting the
+generic Install button.
+
+Next gate: wait for Anna to approve review candidate `1.1.1`. Do not click a
+Version-history `Publish` button or run `apps release` while the app is
+`pending_review`. Release only the approved exact `1.1.1` candidate.
 
 ## Upload, install, and review
 
